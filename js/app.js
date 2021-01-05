@@ -5,7 +5,39 @@ function insurance(brand, year, type) {
   this.brand = brand;
   this.year = year;
   this.type = type;
+  this.value = 0;
 }
+
+insurance.prototype.quote = function () {
+  switch (this.brand) {
+    case "1":
+      this.value = 200 * 1.15;
+      break;
+    case "2":
+      this.value = 200 * 1.05;
+      break;
+    case "3":
+      this.value = 200 * 1.35;
+      break;
+
+    default:
+      this.value = 200 * 0;
+      break;
+  }
+
+  // Diferencia por año
+  const diferent = new Date().getFullYear() - this.year;
+  this.value -= (diferent * 3 * this.value) / 100;
+
+  // Por tipo de seguro
+  if (this.type === "basico") {
+    this.value = this.value + this.value * 0.3;
+  } else {
+    this.value = this.value + this.value * 0.5;
+  }
+
+  console.log(this.value);
+};
 
 function interface() {}
 
@@ -67,7 +99,11 @@ function quoteInsurance(e) {
 
   if (brand === "") {
     ui.showMessage("Se debe ingresar la marca.", "error");
+    return;
   } else {
     ui.showMessage("Cotizando...", "correcto");
   }
+
+  const insu = new insurance(brand, year, type);
+  insu.quote();
 }

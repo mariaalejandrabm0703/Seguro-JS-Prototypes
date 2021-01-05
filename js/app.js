@@ -1,3 +1,6 @@
+//variables
+const form = document.querySelector("#cotizar-seguro");
+
 function insurance(brand, year, type) {
   this.brand = brand;
   this.year = year;
@@ -21,6 +24,26 @@ interface.prototype.SetYears = () => {
   }
 };
 
+// Mostrar mensaje del proceso
+interface.prototype.showMessage = (mensaje, tipo) => {
+  const div = document.createElement("div");
+
+  if (tipo === "error") {
+    div.classList.add("error");
+  } else {
+    div.classList.add("correcto");
+  }
+
+  div.classList.add("mensaje", "mt-10");
+  div.textContent = mensaje;
+
+  form.insertBefore(div, document.querySelector("#resultado"));
+
+  setTimeout(() => {
+    div.remove();
+  }, 3000);
+};
+
 const ui = new interface();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 eventListener();
 
 function eventListener() {
-  const form = document.querySelector("#cotizar-seguro");
   form.addEventListener("submit", quoteInsurance);
 }
 
@@ -44,10 +66,8 @@ function quoteInsurance(e) {
   const type = document.querySelector('input[name="tipo"]:checked').value;
 
   if (brand === "") {
-    console.log("no marca");
+    ui.showMessage("Se debe ingresar la marca.", "error");
   } else {
-    console.log("si valores");
+    ui.showMessage("Cotizando...", "correcto");
   }
-
-  console.log("brand " + brand + "year " + year + "type " + type);
 }

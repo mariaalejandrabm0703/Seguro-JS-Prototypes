@@ -35,8 +35,6 @@ insurance.prototype.quote = function () {
   } else {
     this.value = this.value + this.value * 0.5;
   }
-
-  console.log(this.value);
 };
 
 function interface() {}
@@ -76,6 +74,41 @@ interface.prototype.showMessage = (mensaje, tipo) => {
   }, 3000);
 };
 
+interface.prototype.showResult = (insurance) => {
+  // Muestra el seguro cotizado y la información
+  const result = document.querySelector("#resultado");
+  let brand = "";
+  switch (insurance.brand) {
+    case "1":
+      brand = "Americano";
+      break;
+    case "2":
+      brand = "Asiatico";
+      break;
+    case "3":
+      brand = "Europeo";
+      break;
+  }
+  // Crear un div
+  const div = document.createElement("div");
+  div.classList.add("mt-10");
+  // Insertar la informacion
+  div.innerHTML = `
+          <p class='header'>Tu Resumen: </p>
+          <p class="font-bold">Marca: <span class="font-normal"> ${brand} </span> </p>
+          <p class="font-bold">Año: <span class="font-normal"> ${insurance.year} </span> </p>
+          <p class="font-bold">Tipo: <span class="font-normal"> ${insurance.type} </span> </p>
+          <p class="font-bold"> Total: <span class="font-normal"> $ ${insurance.value} </span> </p>
+     `;
+
+  const spinner = document.querySelector("#cargando");
+  spinner.style.display = "block";
+  setTimeout(() => {
+    spinner.style.display = "none";
+    resultado.appendChild(div);
+  }, 3000);
+};
+
 const ui = new interface();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -103,7 +136,14 @@ function quoteInsurance(e) {
   } else {
     ui.showMessage("Cotizando...", "correcto");
   }
+  console.log("lo elimina");
+  // Ocultar cotizaciones previas
+  const results = form.querySelector("#resultado div");
 
+  if (results != null) {
+    results.remove();
+  }
   const insu = new insurance(brand, year, type);
   insu.quote();
+  ui.showResult(insu);
 }
